@@ -1,10 +1,10 @@
 package com.forge.backend.model;
 
-piblic enum TaskStatus{
-    PENDING,
-    SCHEDULED,
+public enum TaskStatus {
+    CREATED,
+    QUEUED,
     RUNNING,
     COMPLETED,
-    FAILED
+    FAILED,
+    CANCELLED
 }
-
