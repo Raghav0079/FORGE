@@ -26,7 +26,7 @@ public class TaskServiceImpl implements TaskService {
         Task task = new Task();
         task.setName(createDTO.name());
         task.setPayload(createDTO.payload());
-        task.setAlgorithmType(createDTO.algorithm());
+        task.setSchedulingAlgorithm(createDTO.schedulingAlgorithm());
         task.setStatus(TaskStatus.CREATED); // Initial state before entering the queue
 
         return mapToResponseDTO(taskRepository.save(task));
@@ -53,7 +53,7 @@ public class TaskServiceImpl implements TaskService {
                 task.getId(),
                 task.getName(),
                 task.getStatus(),
-                task.getAlgorithmType(),
+                task.getSchedulingAlgorithm(),
                 task.getCreatedAt()
         );
     }
