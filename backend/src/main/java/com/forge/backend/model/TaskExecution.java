@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 /**
  * Represents a single execution record for a Task.
@@ -22,8 +23,9 @@ import java.time.LocalDateTime;
 public class TaskExecution {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(updatable = false, nullable = false)
+    private UUID id;
 
     // The task this execution belongs to
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -45,8 +47,8 @@ public class TaskExecution {
     private TaskStatus status;
 
     // Identifier of the worker node that executed this task
-    @Column(name = "worker_id", length = 100)
-    private String workerId;
+    @Column(name = "worker_id")
+    private UUID workerId;
 
     // Optional error message captured on failure
     @Column(name = "error_message", length = 1000)

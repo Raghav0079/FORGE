@@ -48,9 +48,10 @@ CREATE TABLE users (
 -- tasks
 -- -------------------------------------------------------------
 CREATE TABLE tasks (
-    id                   BIGSERIAL    PRIMARY KEY,
+    id                   UUID         NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
     name                 VARCHAR(100) NOT NULL,
     description          VARCHAR(500),
+    payload              TEXT,
     priority             INTEGER      NOT NULL,
     status               VARCHAR(30)  NOT NULL,
     scheduling_algorithm VARCHAR(30)  NOT NULL,
@@ -64,13 +65,13 @@ CREATE TABLE tasks (
 -- task_executions
 -- -------------------------------------------------------------
 CREATE TABLE task_executions (
-    id            BIGSERIAL    PRIMARY KEY,
-    task_id       BIGINT       NOT NULL REFERENCES tasks(id) ON DELETE CASCADE,
+    id            UUID         NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
+    task_id       UUID         NOT NULL REFERENCES tasks(id) ON DELETE CASCADE,
     started_at    TIMESTAMP,
     finished_at   TIMESTAMP,
     duration_ms   BIGINT,
     status        VARCHAR(20)  NOT NULL,
-    worker_id     VARCHAR(100),
+    worker_id     UUID,
     error_message VARCHAR(1000),
     created_at    TIMESTAMP    NOT NULL DEFAULT now()
 );
@@ -80,3 +81,26 @@ CREATE INDEX idx_task_executions_task_id ON task_executions(task_id);
 
 -- Index: quickly look up tasks by status (scheduler hot path)
 CREATE INDEX idx_tasks_status ON tasks(status);
+
+-- -------------------------------------------------------------
+-- workers
+-- -------------------------------------------------------------
+CREATE TABLE workers (
+    id          UUID         NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
+    name        VARCHAR(100) NOT NULL,
+    status      VARCHAR(20)  NOT NULL DEFAULT 'IDLE',
+    created_at  TIMESTAMP    NOT NULL DEFAULT now(),
+    updated_at  TIMESTAMP    NOT NULL DEFAULT now()
+);
+
+-- -------------------------------------------------------------
+-- schedulers
+-- -------------------------------------------------------------
+CREATE TABLE schedulers (
+    id          UUID         NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
+    name        VARCHAR(100) NOT NULL,
+    status      VARCHAR(20)  NOT NULL DEFAULT 'ACTIVE',
+    algorithm   VARCHAR(30)  NOT NULL,
+    created_at  TIMESTAMP    NOT NULL DEFAULT now(),
+    updated_at  TIMESTAMP    NOT NULL DEFAULT now()
+);
