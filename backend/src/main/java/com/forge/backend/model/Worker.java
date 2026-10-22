@@ -13,6 +13,8 @@ import java.util.UUID;
 
 /**
  * Represents a worker node capable of executing tasks.
+ * Workers report liveness via a heartbeat; the WorkerService
+ * monitors {@code lastHeartbeatAt} and marks stale nodes OFFLINE.
  */
 @Entity
 @Table(name = "workers")
@@ -33,6 +35,13 @@ public class Worker {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private WorkerStatus status;
+
+    /**
+     * Timestamp of the most recent heartbeat received from this worker.
+     * Null for newly registered workers until the first heartbeat arrives.
+     */
+    @Column(name = "last_heartbeat_at")
+    private LocalDateTime lastHeartbeatAt;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
