@@ -20,6 +20,14 @@ spring:
   flyway:
     enabled: true
     baseline-on-migrate: true
+    # Version 0 does not exist, so Flyway will run ALL versioned scripts (V1+)
+    # on a fresh database instead of skipping V1 as the "baseline".
+    baseline-version: 0
+    # Auto-repair a previously failed migration entry in flyway_schema_history
+    # so the app can still start after a partial migration run.
+    repair-on-migrate: true
+    # Allow out-of-order migration application during development.
+    out-of-order: true
 
 server:
   port: 8080

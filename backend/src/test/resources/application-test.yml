@@ -16,7 +16,9 @@ spring:
         dialect: org.hibernate.dialect.H2Dialect
 
   flyway:
-    enabled: false   # Flyway scripts use PostgreSQL syntax; skip in unit tests
+    enabled: false
+    baseline-on-migrate: true
+    baseline-version: 0
 
 forge:
   worker:
